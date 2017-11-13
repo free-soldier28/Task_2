@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ParsingText.Interface
 {
-    internal interface IParsable
+    internal interface IParsable<T>
     {
-        void Parse(string value);
+        List<T> Parse();
     }
 }

@@ -6,15 +6,16 @@ using System.Text.RegularExpressions;
 
 namespace ParsingText
 {
-    public class Text: Proposal, IParsable
+    public class Text : Proposal, IParsable<Proposal>
     {
         private List<Proposal> proposals = new List<Proposal>();
-        public int Count { get; set; } = 0;
+
 
         public Text()
         {
 
         }
+
 
         public Text(string value)
         {
@@ -27,56 +28,33 @@ namespace ParsingText
             return proposals;
         }
 
+
         public int GetCountProposal()
         {
             return proposals.Count;
         }
 
-        public void PrintText(List<Proposal> value)
+
+        public void PrintText()
         {
-            foreach (var proposal in value)
+            foreach (var proposal in proposals)
             {
                 Console.WriteLine(proposal.Value);
             }
         }
 
-
-        // Вывод предложений в порятке возрастания количества слов
-        public void OffersInAscendingOrder()
+        public List<Proposal> Parse()
         {
-            var pr = proposals.OrderBy(x => x.GetCountWords());
-            foreach (var propos in pr)
+            string pattern = "([А-ЯA-Z].*?\\. | [А-ЯA-Z].*?\\! | [А-ЯA-Z].*?\\?)";
+            string[] substrings = Regex.Split(Value, pattern);
+
+            foreach (string match in substrings)
             {
-               Console.WriteLine(propos.Value);
+                proposals.Add(new Proposal(match.Trim()));
             }
+
+            return proposals;
         }
-
-        // Вывод слов задданой длины в вопросительных предложениях 
-        public void InterrogativeSentences(int length)
-        {
-           Proposal temp = new Proposal();
-
-            foreach (var proposal in proposals)
-            {
-                if (proposal.Value.EndsWith("?"))
-                {
-                    proposal.Parse(proposal.Value);
-
-                    foreach (var word in proposal.GetProposal())
-                    {
-                        if (word.GetCountSymbol() == length)
-                        {
-                            temp.AddWord(word.Value);
-                        }
-                    }
-                    //temp.GetProposal().GroupBy(x => x.Value);
-                    temp.PrintProposal();
-                    temp = null;
-                }
-                
-            }
-        }
-
 
 
         //public LinkedList<Proposal> Parse(string value)
@@ -90,18 +68,6 @@ namespace ParsingText
 
         //    return proposals;
         //}
-
-        public void Parse(string value)
-        {
-            string pattern = "([А-ЯA-Z].*?\\. | [А-ЯA-Z].*?\\! | [А-ЯA-Z].*?\\?)";
-            string[] substrings = Regex.Split(value, pattern);
-
-            foreach (string match in substrings)
-            {
-                proposals.Add(new Proposal(match.Trim()));
-                Count++;
-            }
-        }
 
     }
 }
