@@ -47,8 +47,8 @@ namespace ParsingText
 
         public List<Proposal> Parse()
         {
-            string pattern = "([А-ЯA-Z].*?\\. | [А-ЯA-Z].*?\\! | [А-ЯA-Z].*?\\?)";
-            //string pattern = "(\\.\s*[A-ZА-Я])";
+            //string pattern = "([А-ЯA-Z].*?\\. | [А-ЯA-Z].*?\\! | [А-ЯA-Z].*?\\?)";
+            string pattern = @"(?<=[\.*!\?])\s+(?=[А-Я]|[A-Z])|(?=\W&([А-Я]|[A-Z]))";
             string[] substrings = Regex.Split(Value, pattern);
 
             foreach (string match in substrings)
