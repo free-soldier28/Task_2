@@ -37,37 +37,30 @@ namespace ParsingText
 
         public void PrintText()
         {
+            int i = 0;
             foreach (var proposal in proposals)
             {
-                Console.WriteLine(proposal.Value);
+                i++;
+                Console.WriteLine(i + ") " + proposal.Value);
             }
         }
 
         public List<Proposal> Parse()
         {
             string pattern = "([А-ЯA-Z].*?\\. | [А-ЯA-Z].*?\\! | [А-ЯA-Z].*?\\?)";
+            //string pattern = "(\\.\s*[A-ZА-Я])";
             string[] substrings = Regex.Split(Value, pattern);
 
             foreach (string match in substrings)
             {
-                proposals.Add(new Proposal(match.Trim()));
+                if (match.Any())
+                {
+                    proposals.Add(new Proposal(match.Trim()));
+                }
             }
 
             return proposals;
         }
-
-
-        //public LinkedList<Proposal> Parse(string value)
-        //{
-        //    string[] arrayProposals = value.Split(new[] { ".", "?", "!", "..." }, StringSplitOptions.RemoveEmptyEntries);
-
-        //    foreach (var proposal in arrayProposals)
-        //    {
-        //        proposals.AddLast(new Proposal(proposal.Trim('\n')));
-        //    }
-
-        //    return proposals;
-        //}
 
     }
 }

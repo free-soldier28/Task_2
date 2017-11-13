@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using ParsingText;
 
 namespace WorkWithText
@@ -18,13 +20,18 @@ namespace WorkWithText
                 text.Value = file.ReadToEnd();
             }
 
-            OffersInAscendingOrder(text.Parse());
+            //text.Parse();
+            //text.PrintText();
+
+            //OffersInAscendingOrder(text.Parse());
+            InterrogativeSentences(text.Parse(), 4);
+
 
 
             // Вывод предложений в порятке возрастания количества слов
             void OffersInAscendingOrder(List<Proposal> Proposals)
             {
-                if (Proposals != null)
+                if (Proposals.Any())
                 {
                     var proposals = Proposals.OrderBy(x => x.Parse().Count());
 
@@ -36,31 +43,24 @@ namespace WorkWithText
             }
 
 
-            // Вывод слов задданой длины в вопросительных предложениях 
-            //void InterrogativeSentences(int length)
-            //{
-            //    Proposal temp = new Proposal();
+            // Вывод слов без повторений заданной длины в вопросительных предложениях 
+            void InterrogativeSentences(List<Proposal> Proposals, int length)
+            {
+                var proposals = Proposals.Where(x => x.Value.Contains("?"));
 
-            //    foreach (var proposal in proposals)
-            //    {
-            //        if (proposal.Value.EndsWith("?"))
-            //        {
-            //            proposal.Parse();
+                foreach (var proposal in proposals)
+                {
+                    var words = proposal.Parse();
+                    words.Where(x => x.GetCountSymbol() == length).GroupBy(z => z.Value);
 
-            //            foreach (var word in proposal.GetProposal())
-            //            {
-            //                if (word.GetCountSymbol() == length)
-            //                {
-            //                    temp.AddWord(word.Value);
-            //                }
-            //            }
-            //            //temp.GetProposal().GroupBy(x => x.Value);
-            //            temp.PrintProposal();
-            //            temp = null;
-            //        }
+                    foreach (var word in words)
+                    {
+                        Console.WriteLine(word.Value);
+                    }
+                }
 
-            //    }
-            //}
+            }
+
 
             Console.ReadKey();
         }
